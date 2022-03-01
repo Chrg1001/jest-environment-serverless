@@ -44,7 +44,13 @@ class ServerlessWrapper extends NodeEnvironment {
     const serverless = new Serverless({
       interactive: false,
       servicePath: config.cwd,
+      commands: [],
+      options: {},
     });
+
+    // Prevent Serverless from capturing Jest CLI arguments
+    serverless.cliInputArgv = [];
+
     this.global.ServerlessWrapper.serverless = serverless;
     this.global.ServerlessWrapper.getEnv = this.getEnv;
     this.global.ServerlessWrapper.setEnv = this.setEnv;
@@ -56,11 +62,11 @@ class ServerlessWrapper extends NodeEnvironment {
     const { serverless } = this.global.ServerlessWrapper;
 
     await serverless.init();
-    await serverless.variables.populateService({});
+    // await serverless.variables.populateService({});
 
     serverless.service.mergeArrays();
     serverless.service.setFunctionNames({});
-    serverless.service.validate();
+    // await serverless.service.validate();
 
     // Populate all env vars
     const serviceVars = serverless.service.provider.environment || {};
